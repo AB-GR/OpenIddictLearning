@@ -38,9 +38,12 @@ builder.Services.AddOpenIddict()
                 .AllowAuthorizationCodeFlow()
                 .RequireProofKeyForCodeExchange();
 
+            options.AllowRefreshTokenFlow();
+
             options
                   .SetAuthorizationEndpointUris("/connect/authorize")
-                  .SetTokenEndpointUris("/connect/token");
+                  .SetTokenEndpointUris("/connect/token")
+                  .SetUserinfoEndpointUris("/connect/userinfo");
 
             // Encryption and signing of tokens
             options
@@ -55,7 +58,8 @@ builder.Services.AddOpenIddict()
             options
                 .UseAspNetCore()
                 .EnableTokenEndpointPassthrough()
-                .EnableAuthorizationEndpointPassthrough();
+                .EnableAuthorizationEndpointPassthrough()
+                .EnableUserinfoEndpointPassthrough();
         });
 
 builder.Services.AddHostedService<TestHostedService>();
@@ -68,6 +72,7 @@ if(app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
+app.UseAuthorization();
 app.UseEndpoints(endpoints => endpoints.MapDefaultControllerRoute());
 
 app.Run();
